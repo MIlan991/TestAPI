@@ -312,6 +312,81 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Complete Test",
+			"item": [
+				{
+					"name": "Complete test - users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// 1. Test status code",
+									"pm.test(\"Test status code - 200\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// 2. Test time response",
+									"pm.test(\"Response time is acceptable\", function(){",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"// 3. Test Header",
+									"pm.test(\"Test Header\", function(){",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"",
+									"// 4. Validation Structure",
+									"pm.test(\"Validation Structure\", function(){",
+									"",
+									"    const jsonData = pm.response.json();",
+									"",
+									"    pm.expect(jsonData).to.be.an('object');",
+									"    pm.expect(jsonData).to.have.keys(['page', 'per_page', 'total', 'total_pages', 'data', 'support']);",
+									"",
+									"    pm.expect(jsonData.page).to.be.a('number').and.to.be.at.least(1);",
+									"    pm.expect(jsonData.per_page).to.be.a('number').and.to.be.at.least(1);",
+									"    pm.expect(jsonData.total).to.be.a('number').and.to.be.at.least(0);",
+									"    pm.expect(jsonData.total_pages).to.be.a('number').and.to.be.at.least(0);",
+									"",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"    pm.expect(jsonData.support).to.be.an('object');",
+									"})",
+									"",
+									"// 5. User Structure Validation",
+									"pm.test(\"User Structure Validation\", function(){",
+									"",
+									"    const users = pm.response.json().data;",
+									"",
+									"    users.forEach(user => {",
+									"",
+									"        pm.expect(user).to.be.an('object');",
+									"        pm.expect(user).to.have.keys(['id', 'email', 'first_name', 'last_name', 'avatar']);",
+									"",
+									"        pm.expect(user.id).to.be.a('number').and.to.be.at.least(1);",
+									"        pm.expect(user.email).to.be.a('string').and.to.match(/^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/);",
+									"        pm.expect(user.first_name).to.be.a('string');",
+									"        pm.expect(user.last_name).to.be.a('string');",
+									"        pm.expect(user.avatar).to.be.a('string').and.to.match(/^https:\\/\\/.*\\.jpg$/);",
+									"",
+									"    });",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/users"
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
