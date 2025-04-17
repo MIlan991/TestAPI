@@ -1,0 +1,317 @@
+{
+	"info": {
+		"_postman_id": "9ce8b2f0-17ca-4cf1-9658-8d0ff0ca77d5",
+		"name": "Test REST API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "41683249"
+	},
+	"item": [
+		{
+			"name": "Status code",
+			"item": [
+				{
+					"name": "Status OK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test status code - 200\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/users%3Fpage=2"
+					},
+					"response": []
+				},
+				{
+					"name": "Status 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test status code - 404\", function() {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/users/2344"
+					},
+					"response": []
+				},
+				{
+					"name": "Status 201",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test status code - 201\", function() {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Milan Cica\",\n    \"job\": \"QA Tester\"\n}"
+						},
+						"url": "{{baseUrl}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Status 204",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test status code - 204\", function() {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/users/2"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "JSON Structure",
+			"item": [
+				{
+					"name": "Data Types",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test if all objects have the required field\", function() {",
+									"    let jsonData = pm.response.json();",
+									"",
+									"    pm.expect(jsonData).to.have.property(\"page\");",
+									"    pm.expect(jsonData).to.have.property(\"per_page\");",
+									"    pm.expect(jsonData).to.have.property(\"total\");",
+									"    pm.expect(jsonData).to.have.property(\"total_pages\");",
+									"    pm.expect(jsonData).to.have.property(\"data\");",
+									"    pm.expect(jsonData).to.have.property(\"support\");",
+									"        pm.expect(jsonData.support).to.have.property(\"url\");",
+									"        pm.expect(jsonData.support).to.have.property(\"text\");",
+									"",
+									"    jsonData.data.forEach(user => {",
+									"        pm.expect(user).to.have.property(\"id\");",
+									"        pm.expect(user).to.have.property(\"email\");",
+									"        pm.expect(user).to.have.property(\"first_name\");",
+									"        pm.expect(user).to.have.property(\"last_name\");",
+									"        pm.expect(user).to.have.property(\"avatar\");",
+									"    });",
+									"",
+									"});",
+									"",
+									"pm.test(\"Test type of data in json response\", function() {",
+									"    let jsonData = pm.response.json();",
+									"",
+									"    pm.expect(jsonData.page).to.be.a(\"number\");",
+									"    pm.expect(jsonData.per_page).to.be.a(\"number\");",
+									"    pm.expect(jsonData.total).to.be.a(\"number\");",
+									"    pm.expect(jsonData.total_pages).to.be.a(\"number\");",
+									"    pm.expect(jsonData.data).to.be.an(\"array\");",
+									"    pm.expect(jsonData.support).to.be.an(\"object\");",
+									"        pm.expect(jsonData.support.url).to.be.a(\"string\");",
+									"        pm.expect(jsonData.support.text).to.be.a(\"string\");",
+									"",
+									"    jsonData.data.forEach(user => {",
+									"        pm.expect(user.id).to.be.a(\"number\");",
+									"        pm.expect(user.email).to.be.a(\"string\");",
+									"        pm.expect(user.first_name).to.be.a(\"string\");",
+									"        pm.expect(user.last_name).to.be.a(\"string\");",
+									"        pm.expect(user.avatar).to.be.a(\"string\");",
+									"",
+									"        pm.expect(user.email).to.match(/^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/);",
+									"        pm.expect(user.avatar).to.match(/^https:\\/\\/.*\\.jpg$/);",
+									"    });",
+									"    ",
+									"    pm.expect(jsonData.support.url).to.match(/^https:\\/\\/.*/);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Data Values",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test Data Values\", function () {",
+									"    let jsonData = pm.response.json();",
+									"",
+									"    const expectedUsers = [",
+									"        {",
+									"            id: 1,",
+									"            email: \"george.bluth@reqres.in\",",
+									"            first_name: \"George\",",
+									"            last_name: \"Bluth\",",
+									"            avatar: \"https://reqres.in/img/faces/1-image.jpg\"",
+									"        },",
+									"        {",
+									"            id: 2,",
+									"            email: \"janet.weaver@reqres.in\",",
+									"            first_name: \"Janet\",",
+									"            last_name: \"Weaver\",",
+									"            avatar: \"https://reqres.in/img/faces/2-image.jpg\"",
+									"        },",
+									"        {",
+									"            id: 3,",
+									"            email: \"emma.wong@reqres.in\",",
+									"            first_name: \"Emma\",",
+									"            last_name: \"Wong\",",
+									"            avatar: \"https://reqres.in/img/faces/3-image.jpg\"",
+									"        },",
+									"        {",
+									"            id: 4,",
+									"            email: \"eve.holt@reqres.in\",",
+									"            first_name: \"Eve\",",
+									"            last_name: \"Holt\",",
+									"            avatar: \"https://reqres.in/img/faces/4-image.jpg\"",
+									"        },",
+									"        {",
+									"            id: 5,",
+									"            email: \"charles.morris@reqres.in\",",
+									"            first_name: \"Charles\",",
+									"            last_name: \"Morris\",",
+									"            avatar: \"https://reqres.in/img/faces/5-image.jpg\"",
+									"        },",
+									"        {",
+									"            id: 6,",
+									"            email: \"tracey.ramos@reqres.in\",",
+									"            first_name: \"Tracey\",",
+									"            last_name: \"Ramos\",",
+									"            avatar: \"https://reqres.in/img/faces/6-image.jpg\"",
+									"        }",
+									"    ];",
+									"",
+									"    expectedUsers.forEach((user, index) => {",
+									"        pm.expect(jsonData.data[index].id).to.eql(user.id);",
+									"        pm.expect(jsonData.data[index].email).to.eql(user.email);",
+									"        pm.expect(jsonData.data[index].first_name).to.eql(user.first_name);",
+									"        pm.expect(jsonData.data[index].last_name).to.eql(user.last_name);",
+									"        pm.expect(jsonData.data[index].avatar).to.eql(user.avatar);",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/users"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Response Time",
+			"item": [
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseTime = pm.response.responseTime;",
+									"",
+									"pm.test(`Response Time is (${responseTime}ms).`, function() {",
+									"    const excellentTime = 100;",
+									"    const goodTime = 200;",
+									"    const acceptableTime = 100;",
+									"",
+									"    if(responseTime <= excellentTime) {",
+									"        pm.expect(responseTime).to.be.below(excellentTime + 1);",
+									"        console.log(\"Excellent Response Time\");",
+									"    } else if(responseTime <= goodTime) {",
+									"        pm.expect(responseTime).to.be.below(goodTime + 1);",
+									"        console.log(\"Good Response Time\");",
+									"    } else if(responseTime <= acceptableTime) {",
+									"        pm.expect(responseTime).to.be.below(acceptableTime + 1);",
+									"        console.log(\"Acceptable Response Time\");",
+									"    } else {",
+									"        pm.expect.fail(\"Response Time is not acceptable\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/users"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
